@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content
+  id=""
+  name="Remote Access to Safe Deposit Storage"
+  author="Chem O`Dun"
+  version="100"
+  date="2025-06-14"
+  save="false"
+  lastupdate=""
+  description="The player HQ is equipped with a Safe Deposit Storage, which is accessible by default only when Player is docked at the HQ. This mod allows the Player to access the Safe Deposit Storage remotely. Distance is based on result of researching the Personal Teleportation range.">
+  <dependency version="710"></dependency>
+</content>
