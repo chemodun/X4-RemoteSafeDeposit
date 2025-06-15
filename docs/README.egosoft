@@ -2,7 +2,7 @@
 
 In game, the player can access the Safe Deposit Storage only when he is in appropriate room of the Headquarters. But in parallel, the Player can research the individual Teleportation technology, which allows to teleport to HQ from any place in the game universe, at the end of the research tree.
 
-[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDepos/refs/heads/main/docs/images/title.png[/img][/spoiler]
+[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/title.png[/img][/spoiler]
 
 This mod implements the remote access functionality, allowing players to manage their Safe Deposit Storage and, as side effect - the Pilot's Inventories, from anywhere in the game world, as long as they have completed the necessary research.
 It is mean - the distance, from which the player can access the Safe Deposit Storage and Pilot's Inventories, is limited only by the range of the Teleportation technology.
@@ -28,41 +28,41 @@ Or you can do it via the [url=https://next.nexusmods.com/profile/ChemODun/mods?g
 To get an access to the Safe Deposit Storage on Player's HQ, you should make several simple steps:
 [list]
 [*] Establish a communication with the Player's HQ Station Manager on [b]Crew[/b] tab of the [b]Information[/b] menu of the Player's HQ.
-[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDepos/refs/heads/main/docs/images/station_manager.png[/img][/spoiler]
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/station_manager.png[/img][/spoiler]
 [list][*] There will be a new button [b]Access Safe Deposit Storage[/b] in a top left corner of the interaction menu.
-[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDepos/refs/heads/main/docs/images/station_manager_menu.png[/img][/spoiler]
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/station_manager_menu.png[/img][/spoiler]
 [list][*] Simple press it, and the standard Safe Deposit Storage Screen will be opened, allowing you to manage your Safe Deposit Storage as usual.
-[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDepos/refs/heads/main/docs/images/safe_deposit_box_remote.png[/img][/spoiler]
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/safe_deposit_box_remote.png[/img][/spoiler]
 
 [size=125][u]Accessing the Pilot's Inventories[/u][/size]
 
 To get an access to the Pilot's Inventories, you should do next:
 [list]
 [*] Establish a communication with the Pilot directly via context menu of the appropriate ship or via the same [b]Crew[/b] tab of the [b]Information[/b] menu of the ship.
-[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDepos/refs/heads/main/docs/images/pilot_communication.png[/img][/spoiler]
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/pilot_communication.png[/img][/spoiler]
 [list][*] For the Pilot's Inventory, there will be a new button [b]Show Inventory[/b] in a top left corner of the interaction menu.
-[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDepos/refs/heads/main/docs/images/pilot_menu.png[/img][/spoiler]
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/pilot_menu.png[/img][/spoiler]
 Important notice - you have not to be a pilot of any other ship, otherwise the Pilot's Inventory will not be available for you, as it's slot will be occupied by other command.
 
 In addition there will be a change in interaction with a pilot/commander of the ship when you are on the same ship.
 [list]
 [*] Instead of the "standard" [b]Hand me inventory[/b] command, there will be a new command [b]Inventory: More...[/b] in the context menu of the pilot/commander.
-[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDepos/refs/heads/main/docs/images/pilot_on_ship_menu.png[/img][/spoiler]
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/pilot_on_ship_menu.png[/img][/spoiler]
 [list]
 [*] Which will contain both [b]Hand me inventory[/b] and [b]Show Inventory[/b] commands inside.
-[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDepos/refs/heads/main/docs/images/pilot_extended_inventory_menu.png[/img][/spoiler]
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/pilot_extended_inventory_menu.png[/img][/spoiler]
 
 In both cases, the Pilot's Inventory will be opened in the same way as the Safe Deposit Storage, allowing you to manage it more granularly, then simply transferring items to the Player's inventory.
 Important remark - the Title of the opened window will be the same as for the Safe Deposit Storage, but the content will be Pilot's Inventory.
 
-[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDepos/refs/heads/main/docs/images/pilot_inventory.png[/img][/spoiler]
+[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/pilot_inventory.png[/img][/spoiler]
+
+There is a short video with gameplay demonstration - [url=https://www.youtube.com/watch?v=ajfj0C5JpwI]X4 Foundations - Remote Access to Safe Deposit Storage and Pilot's Inventories[/url]
 
 [size=130][u]License[/u][/size]
 
-This mod is released under the [url=https://github.com/chemodun/X4-RemoteSafeDepos/raw/main//LICENSE]Apache License 2.0[/url].
+This mod is released under the [url=https://github.com/chemodun/X4-RemoteSafeDeposit/raw/main//LICENSE]Apache License 2.0[/url].
 
 [size=130][u]Links[/u][/size]
-
-There is a short video with gameplay demonstration - [url=https://www.youtube.com/watch?v=ajfj0C5JpwI]X4 Foundations - Remote Access to Safe Deposit Storage and Pilot's Inventories[/url]
 
 There is a thread on EgoSoft forum - [[url=https://forum.egosoft.com/viewtopic.php?t=471543]Mod/MD] Remote Access to Safe Deposit Storage and Pilot's Inventories[/url]
