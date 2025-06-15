@@ -48,7 +48,7 @@ jobs:
           for file_changed in ${CHANGED_FILES}; do
             for conversion_type in egosoft nexus steam; do
               echo "Converting $file_changed to $conversion_type"
-              python3 markdown-to-bbcode-simple/markdown_to_bbcode.py -t $conversion_type -o "docs" "$file_changed"
+              python3 markdown-to-bbcode-simple/markdown_to_bbcode.py -t $conversion_type -o "docs" -r ${{ github.repository }} "$file_changed"
               if [[ $? -ne 0 ]]; then
                 echo "Error converting $file_changed to $conversion_type" >&2
               else
