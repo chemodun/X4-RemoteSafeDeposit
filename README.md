@@ -18,7 +18,7 @@ This mod is compatible with the game version 7.10 and higher.
 
 ## Download
 
-You can download the latest version via Steam - [Chem O`Dun's Workshop on Steam](https://steamcommunity.com/sharedfiles/filedetails/?id=)
+You can download the latest version via Steam - [Chem O`Dun's Workshop on Steam](https://steamcommunity.com/id/chemodun/myworkshopfiles/?appid=392160)
 Or you can do it via the [Chem O`Dun's Mods list on Nexus Mods](https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659)
 
 ## Usage
