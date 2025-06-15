@@ -57,12 +57,12 @@ Important remark - the Title of the opened window will be the same as for the Sa
 
 ![Pilot's Inventory](docs/images/pilot_inventory.png)
 
+There is a short video with gameplay demonstration - [X4 Foundations - Remote Access to Safe Deposit Storage and Pilot's Inventories](https://www.youtube.com/watch?v=ajfj0C5JpwI)
+
 ## License
 
 This mod is released under the [Apache License 2.0](LICENSE).
 
 ## Links
-
-There is a short video with gameplay demonstration - [X4 Foundations - Remote Access to Safe Deposit Storage and Pilot's Inventories](https://www.youtube.com/watch?v=ajfj0C5JpwI)
 
 There is a thread on EgoSoft forum - [[Mod/MD] Remote Access to Safe Deposit Storage and Pilot's Inventories](https://forum.egosoft.com/viewtopic.php?t=471543)
