@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.01] - 2025-06-16
+
+### Changed
+
+- Improved debug logging, for resolving of possible issues with the extension.
+
 ## [1.00] - 2025-06-15
 
 ### Added

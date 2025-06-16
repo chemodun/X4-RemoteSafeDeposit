@@ -64,6 +64,7 @@
         <set_value name="$isRemoteActionAcceptable" exact="false" />
         <do_if value="ware.research_teleportation_range_03.research.unlocked">
           <set_value name="$isRemoteActionAcceptable" exact="true" />
+          <debug_text text="'RemoteAction: Teleportation Unlocked: Range 3: %s.'.             [               @ware.research_teleportation_range_03.research.unlocked             ]" />
         </do_if>
         <do_else>
           <set_value name="$distanceToRemote" exact="player.sector.gatedistance.{event.object.controlled.sector}" />
@@ -76,7 +77,7 @@
           <do_elseif value="$distanceToRemote lt 1 and ware.research_teleportation.research.Unlocked">
             <set_value name="$isRemoteActionAcceptable" exact="true" />
           </do_elseif>
-          <debug_text text="'RemoteAction: Distance: %s. Teleportation Unlocked: Basic: %s. Range 1: %s. Range 2: %s. Range 3: %s.'             [               @$distanceToRemote,               @ware.research_teleportation.research.unlocked,               @ware.research_teleportation_range_01.research.unlocked,               @ware.research_teleportation_range_02.research.unlocked,               @ware.research_teleportation_range_03.research.unlocked             ]" />
+          <debug_text text="'RemoteAction: Distance: %s. Teleportation Unlocked: Basic: %s. Range 1: %s. Range 2: %s.'.             [               @$distanceToRemote,               @ware.research_teleportation.research.unlocked,               @ware.research_teleportation_range_01.research.unlocked,               @ware.research_teleportation_range_02.research.unlocked             ]" />
           <remove_value name="$distanceToRemote" />
         </do_else>
       </actions>
