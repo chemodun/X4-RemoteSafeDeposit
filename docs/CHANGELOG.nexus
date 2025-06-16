@@ -1,5 +1,11 @@
 [size=4][u]Changelog[/u][/size]
 
+[size=3][u][b][1.01] - 2025-06-16[/b][/u][/size]
+
+[size=3][u][i]Changed[/i][/u][/size]
+[list]
+[*] Improved debug logging, for resolving of possible issues with the extension.
+[/list]
 [size=3][u][b][1.00] - 2025-06-15[/b][/u][/size]
 
 [size=3][u][i]Added[/i][/u][/size]
