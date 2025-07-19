@@ -15,15 +15,27 @@ This mod is compatible with the game version 7.10 and higher.
 [list]
 [*] Access to Safe Deposit Storage and Pilot's Inventories from anywhere in the game world, depending on the Teleportation technology range.
 [*] Ability to transfer items between Safe Deposit Storage and Pilot's Inventories and Player's inventory.
+[*] Support for the context menu, if any kind of the [b]X4 Mod Support APIs[/b] is installed (Not required, but recommended for better user experience).
 [/list]
 [h2][b]Download[/b][/h2]
 
 You can download the latest version via Steam - [url=https://steamcommunity.com/id/chemodun/myworkshopfiles/?appid=392160]Chem O`Dun's Workshop on Steam[/url]
+
 Or you can do it via the [url=https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659]Chem O`Dun's Mods list on Nexus Mods[/url]
 
 [h2][b]Usage[/b][/h2]
 
 [h2]Accessing the HQ's Safe Deposit Storage[/h2]
+
+[h3][b]Safe Deposit Storage via Context Menu[/b][/h3]
+
+If you have installed any of the [b]X4 Mod Support APIs[/b], you can access the Safe Deposit Storage and Pilot's Inventories via the context menu of the Player's HQ - [b]Access Safe Deposit Storage[/b].
+
+[img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/context_menu_acess_safe_deposit_storage.png[/img]
+
+If the HQ is too far away, taking in account the Teleportation range, the context menu will be disabled, with respective hover tooltip.
+
+[h3][b]Safe Deposit Storage via Station Manager Interaction[/b][/h3]
 
 To get an access to the Safe Deposit Storage on Player's HQ, you should make several simple steps:
 [list]
@@ -36,11 +48,25 @@ To get an access to the Safe Deposit Storage on Player's HQ, you should make sev
 
 [h2]Accessing the Pilot's Inventories[/h2]
 
+[h3][b]Pilot's Inventory via Context Menu[/b][/h3]
+
+If you have installed any of the [b]X4 Mod Support APIs[/b], you can access the Pilot's Inventories via the context menu of the Pilot's ship - [b]Open the inventory menu[/b].
+
+[img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/context_menu_inventory.png[/img]
+
+If the Pilot's Inventory is empty, the context menu will be disabled, with respective hover tooltip.
+
+[img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/context_menu_inventory_empty.png[/img]
+
+If the Pilot's Inventory too far away, taking in account the Teleportation range, the context menu will be disabled, with respective hover tooltip.
+
+[h3][b]Pilot's Inventory via Pilot Communication[/b][/h3]
+
 To get an access to the Pilot's Inventories, you should do next:
 [list]
 [*] Establish a communication with the Pilot directly via context menu of the appropriate ship or via the same [b]Crew[/b] tab of the [b]Information[/b] menu of the ship.
 [/list][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/pilot_communication.png[/img]
-[list][*] For the Pilot's Inventory, there will be a new button [b]Show Inventory[/b] in a top left corner of the interaction menu.
+[list][*] For the Pilot's Inventory, there will be a new button [b]Open the inventory menu[/b] in a top left corner of the interaction menu.
 [/list][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/pilot_menu.png[/img]
 Important notice - you have not to be a pilot of any other ship, otherwise the Pilot's Inventory will not be available for you, as it's slot will be occupied by other command.
 
@@ -49,7 +75,7 @@ In addition there will be a change in interaction with a pilot/commander of the 
 [*] Instead of the "standard" [b]Hand me inventory[/b] command, there will be a new command [b]Inventory: More...[/b] in the context menu of the pilot/commander.
 [/list][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/pilot_on_ship_menu.png[/img]
 [list]
-[*] Which will contain both [b]Hand me inventory[/b] and [b]Show Inventory[/b] commands inside.
+[*] Which will contain both [b]Hand me inventory[/b] and [b]Open the inventory menu[/b] commands inside.
 [/list][img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/pilot_extended_inventory_menu.png[/img]
 
 In both cases, the Pilot's Inventory will be opened in the same way as the Safe Deposit Storage, allowing you to manage it more granularly, then simply transferring items to the Player's inventory.
@@ -57,8 +83,13 @@ Important remark - the Title of the opened window will be the same as for the Sa
 
 [img]https://raw.githubusercontent.com/chemodun/X4-RemoteSafeDeposit/refs/heads/main/docs/images/pilot_inventory.png[/img]
 
-There is a short video with gameplay demonstration - X4 Foundations - Remote Access to Safe Deposit Storage and Pilot's Inventories
-[previewyoutube=ajfj0C5JpwI;full][/previewyoutube]
+[h2][b]Note if X4 Mod Support APIs is not installed[/b][/h2]
+
+Please be aware that if the [b]X4 Mod Support APIs[/b] is not installed, you can see one small error message in the debug log file, when it is enabled:
+
+[i]Error in MD cue md.RemoteSafeDeposit.AddRemoteAccessActions: Evaluated value 'null' is not of type cue[/i].
+
+This is not an error, but a warning that the context menu support is not available. The mod will work as expected, but without the context menu support.
 
 [h2][b]License[/b][/h2]
 
@@ -67,3 +98,11 @@ This mod is released under the [url=https://github.com/chemodun/X4-RemoteSafeDep
 [h2][b]Links[/b][/h2]
 
 There is a thread on EgoSoft forum - [[url=https://forum.egosoft.com/viewtopic.php?t=471543]Mod/MD] Remote Access to Safe Deposit Storage and Pilot's Inventories[/url]
+
+[h2]Videos[/h2]
+[list]
+[*] There is a video with gameplay demonstration - X4 Foundations - Remote Access to Safe Deposit Storage and Pilot's Inventories
+[previewyoutube=ajfj0C5JpwI;full][/previewyoutube] for versions prior to 1.02.
+[*] There is a video with demonstration of the context menu support - X4 Foundations - Remote Access to Safe Deposit Storage and Pilot's Inventories. With context menus
+[previewyoutube=7IDXfXtLi3Q;full][/previewyoutube] from version 1.02.
+[/list]
