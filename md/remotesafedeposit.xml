@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="RemoteSafeDeposit" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+  <cues>
+    <cue name="AddRemoteAccessActions" instantiate="true">
+      <conditions>
+        <event_cue_signalled cue="@md.Interact_Menu_API.Get_Actions" />
+        <debug_text text="'RemoteSafeDeposit: Interact: Object: %s, Param: %s'.[@event.object.debugname, @event.param]" />
+        <check_value value="@event.param.$object != null" />
+        <check_value value="@event.param.$object.trueowner == faction.player" />
+        <check_any>
+          <check_value value="@event.param.$object.isheadquarters" />
+          <check_all>
+            <check_value value="@event.param.$object.isclass.ship" />
+            <debug_text
+              text="'RemoteSafeDeposit: Interact: IsShip: %s, Pilot: %s, Is Player Entity: %s,  PilotRace: %s'.[@event.param.$object.isclass.ship, @event.param.$object.pilot, @event.param.$object.pilot != player.entity, @event.param.$object.pilot.race]" />
+            <check_value value="@event.param.$object.pilot != null" />
+            <check_value value="@event.param.$object.pilot.race != race.drone" />
+            <check_value value="@event.param.$object.pilot != player.entity" />
+          </check_all>
+        </check_any>
+      </conditions>
+      <actions>
+        <set_value name="$remoteActionTarget" exact="event.param.$object" />
+        <include_actions ref="IsRemoteActionAcceptable" />
+        <do_if value="@event.param.$object.isheadquarters">
+          <signal_cue_instantly
+            cue="md.Interact_Menu_API.Add_Action"
+            param="table[
+              $id         = 'safe_deposit_remote_hq',
+              $section    = 'interaction',
+              $text       = '%s'.[{1010,50}],
+              $mouseover  = '%s'.[if $isRemoteActionAcceptable == false then {1026, 7816} else {1010,50}],
+              $callback   = RemoteAccessToHQSafeDeposit,
+              $active     = $isRemoteActionAcceptable,
+              ]" />
+        </do_if>
+        <do_else>
+          <signal_cue_instantly
+            cue="md.Interact_Menu_API.Add_Action"
+            param="table[
+              $id         = 'safe_deposit_remote',
+              $section    = 'interaction',
+              $text       = '%s'.[{10190,17002}],
+              $mouseover  = '%s'.[if $isRemoteActionAcceptable == false then {1026, 7816} else if @event.param.$object.pilot.inventory.count le 0 then {1026, 20044} else {10190, 17002}],
+              $callback   = RemoteAccessToPilotInventory,
+              $active     = if $isRemoteActionAcceptable and @event.param.$object.pilot.inventory.count gt 0 then true else false,
+              ]" />
+        </do_else>
+        <remove_value name="$isRemoteActionAcceptable" />
+      </actions>
+    </cue>
+    <cue name="RemoteAccessToHQSafeDeposit" instantiate="true">
+      <conditions>
+        <event_cue_signalled />
+        <debug_text text="'RemoteSafeDeposit: HQSafeDeposit: Object: %s, Param: %s'.[@event.object.debugname, @event.param]" />
+        <check_value value="@event.param.$object.isheadquarters" />
+      </conditions>
+      <actions>
+        <open_menu menu="InventoryTraderMenu" param="[0, 0, event.param.$object.defencenpc, null, true]" />
+      </actions>
+    </cue>
+    <cue name="RemoteAccessToPilotInventory" instantiate="true">
+      <conditions>
+        <event_cue_signalled />
+        <debug_text text="'RemoteSafeDeposit: PilotInventory: Object: %s, Param: %s'.[@event.object.debugname, @event.param]" />
+        <check_value value="@event.param.$object.isclass.ship" />
+        <check_value value="@event.param.$object.pilot != null" />
+        <check_value value="@event.param.$object.pilot != player.entity" />
+        <check_value value="@event.param.$object.pilot.race != race.drone" />
+      </conditions>
+      <actions>
+        <open_menu menu="InventoryTraderMenu" param="[0, 0, event.param.$object.pilot, null, true]" />
+      </actions>
+    </cue>
+    <library name="IsRemoteActionAcceptable">
+      <actions>
+        <set_value name="$isRemoteActionAcceptable" exact="false" />
+        <do_if value="ware.research_teleportation_range_03.research.unlocked">
+          <set_value name="$isRemoteActionAcceptable" exact="true" />
+          <debug_text
+            text="'RemoteSafeDeposit: Teleportation Unlocked: Range 3: %s.'.
+            [
+              @ware.research_teleportation_range_03.research.unlocked
+            ]"
+          />
+        </do_if>
+        <do_else>
+          <do_if value="@remoteActionTarget == null">
+            <set_value name="$remoteActionTarget" exact="event.object.controlled" />
+          </do_if>
+          <set_value name="$distanceToRemote" exact="player.sector.gatedistance.{@$remoteActionTarget.sector}" />
+          <do_if value="$distanceToRemote lt 5 and ware.research_teleportation_range_02.research.unlocked">
+            <set_value name="$isRemoteActionAcceptable" exact="true" />
+          </do_if>
+          <do_elseif value="$distanceToRemote lt 3 and ware.research_teleportation_range_01.research.unlocked">
+            <set_value name="$isRemoteActionAcceptable" exact="true" />
+          </do_elseif>
+          <do_elseif value="$distanceToRemote lt 1 and ware.research_teleportation.research.unlocked">
+            <set_value name="$isRemoteActionAcceptable" exact="true" />
+          </do_elseif>
+          <debug_text
+            text="'RemoteSafeDeposit: Distance: %s. Teleportation Unlocked: Basic: %s. Range 1: %s. Range 2: %s.'.
+              [
+                @$distanceToRemote,
+                @ware.research_teleportation.research.unlocked,
+                @ware.research_teleportation_range_01.research.unlocked,
+                @ware.research_teleportation_range_02.research.unlocked
+              ]"
+          />
+          <remove_value name="$distanceToRemote" />
+          <remove_value name="$remoteActionTarget" />
+        </do_else>
+      </actions>
+    </library>
+  </cues>
+</mdscript>

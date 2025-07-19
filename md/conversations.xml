@@ -5,27 +5,27 @@
   </replace>
   <add sel="/mdscript/cues/cue[@name='DefaultComm']/actions/do_else/do_if[@value='not $npctemplate']/do_if[@value='event.object.controlpost == controlpost.aipilot']/do_if[@value='event.object.controlled']/do_if[@value='event.object.isplayerowned']/do_if[@value='not @event.object.ship.isclass.ship_xs']/do_if[@value='not event.object.ship.buildanchor']/do_else">
     <do_else>
-      <include_actions ref="IsRemoteActionAcceptable" />
+      <include_actions ref="md.RemoteSafeDeposit.IsRemoteActionAcceptable" />
       <do_if value="event.object.inventory.count and $isRemoteActionAcceptable">
-        <add_player_choice text="{1001,2204}" section="g_inventory_remote" position="top_left" comment="Show me your inventory" />
+        <add_player_choice text="{10190, 17002}" section="g_inventory_remote" position="top_left" comment="Show me your inventory" tooltip="{10190, 17002}" />
       </do_if>
       <do_elseif value="event.object.inventory.count == 0">
-        <add_player_choice text="{1001,2204}" section="g_inventory_remote" position="top_left" selectable="false" tooltip="{1026,20044}" comment="Show me your inventory" />
+        <add_player_choice text="{10190, 17002}" section="g_inventory_remote" position="top_left" selectable="false" tooltip="{1026,20044}" comment="Show me your inventory" />
       </do_elseif>
       <do_else>
-        <add_player_choice text="{1001,2204}" section="g_inventory_remote" position="top_left" selectable="false" tooltip="{1026,7802}" comment="Show me your inventory" />
+        <add_player_choice text="{10190, 17002}" section="g_inventory_remote" position="top_left" selectable="false" tooltip="{1026, 7816}" comment="Show me your inventory" />
       </do_else>
       <remove_value name="$isRemoteActionAcceptable" />
     </do_else>
   </add>
   <add sel="/mdscript/cues/cue[@name='DefaultComm']/actions/do_else/do_if[@value='not $npctemplate']/do_elseif[@value='event.object.controlpost == controlpost.manager and event.object.isplayerowned']/do_if[@value='@event.object.controlled']">
     <do_if value="@event.object.controlled.isheadquarters">
-      <include_actions ref="IsRemoteActionAcceptable" />
+      <include_actions ref="md.RemoteSafeDeposit.IsRemoteActionAcceptable" />
       <do_if value="$isRemoteActionAcceptable">
-        <add_player_choice_sub text="{1010,50}" section="g_remote_safe_deposit" position="top_left" comment="Show me Safe Deposit" />
+        <add_player_choice_sub text="{1010,50}" section="g_remote_safe_deposit" position="top_left" comment="Show me Safe Deposit" tooltip="{1010,50}" />
       </do_if>
       <do_else>
-        <add_player_choice_sub text="{1010,50}" section="g_remote_safe_deposit" position="top_left" selectable="false" tooltip="{1026,7814}" comment="Show me Safe Deposit" />
+        <add_player_choice_sub text="{1010,50}" section="g_remote_safe_deposit" position="top_left" selectable="false" tooltip="{1026, 7816}" comment="Show me Safe Deposit" />
       </do_else>
       <remove_value name="$isRemoteActionAcceptable" />
     </do_if>
@@ -57,30 +57,5 @@
       </do_if>
       <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
     </do_elseif>
-  </add>
-  <add sel="/mdscript/cues">
-    <library name="IsRemoteActionAcceptable">
-      <actions>
-        <set_value name="$isRemoteActionAcceptable" exact="false" />
-        <do_if value="ware.research_teleportation_range_03.research.unlocked">
-          <set_value name="$isRemoteActionAcceptable" exact="true" />
-          <debug_text text="'RemoteAction: Teleportation Unlocked: Range 3: %s.'.             [               @ware.research_teleportation_range_03.research.unlocked             ]" />
-        </do_if>
-        <do_else>
-          <set_value name="$distanceToRemote" exact="player.sector.gatedistance.{event.object.controlled.sector}" />
-          <do_if value="$distanceToRemote lt 5 and ware.research_teleportation_range_02.research.unlocked">
-            <set_value name="$isRemoteActionAcceptable" exact="true" />
-          </do_if>
-          <do_elseif value="$distanceToRemote lt 3 and ware.research_teleportation_range_01.research.Unlocked">
-            <set_value name="$isRemoteActionAcceptable" exact="true" />
-          </do_elseif>
-          <do_elseif value="$distanceToRemote lt 1 and ware.research_teleportation.research.Unlocked">
-            <set_value name="$isRemoteActionAcceptable" exact="true" />
-          </do_elseif>
-          <debug_text text="'RemoteAction: Distance: %s. Teleportation Unlocked: Basic: %s. Range 1: %s. Range 2: %s.'.             [               @$distanceToRemote,               @ware.research_teleportation.research.unlocked,               @ware.research_teleportation_range_01.research.unlocked,               @ware.research_teleportation_range_02.research.unlocked             ]" />
-          <remove_value name="$distanceToRemote" />
-        </do_else>
-      </actions>
-    </library>
   </add>
 </diff>
