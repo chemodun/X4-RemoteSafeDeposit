@@ -1,5 +1,22 @@
 [size=4][u]Changelog[/u][/size]
 
+[size=3][u][b][1.03] - 2026-11-19[/b][/u][/size]
+
+[size=3][u][i]Added[/i][/u][/size]
+[list]
+[*] Collect Pilot Inventories: all pilot inventories within Teleportation range of the HQ go into its Safe Deposit Storage at once.
+[*] Optional hotkeys for the Safe Deposit Storage and for the selected ship's pilot inventory.
+[*] Debug Level option in the Extension Options.
+[/list]
+[size=3][u][i]Changed[/i][/u][/size]
+[list]
+[*] Requires the game version 8.00 or newer and the [b]Print Extension List[/b].
+[/list]
+[size=3][u][i]Fixed[/i][/u][/size]
+[list]
+[*] Context menu: the Teleportation range limit was not enforced.
+[*] An object in a sector unreachable by gates counted as within the Teleportation range.
+[/list]
 [size=3][u][b][1.02] - 2025-07-19[/b][/u][/size]
 
 [size=3][u][i]Added[/i][/u][/size]
