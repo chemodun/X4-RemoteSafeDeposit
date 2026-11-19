@@ -7,21 +7,39 @@ In game, the player can access the Safe Deposit Storage only when he is in appro
 This mod implements the remote access functionality, allowing players to manage their Safe Deposit Storage and, as side effect - the Pilot's Inventories, from anywhere in the game world, as long as they have completed the necessary research.
 It is mean - the distance, from which the player can access the Safe Deposit Storage and Pilot's Inventories, is limited only by the range of the Teleportation technology.
 
-## Compatibility
-
-This mod is compatible with the game version 7.10 and higher.
-
 ## Features
 
 - Access to Safe Deposit Storage and Pilot's Inventories from anywhere in the game world, depending on the Teleportation technology range.
 - Ability to transfer items between Safe Deposit Storage and Pilot's Inventories and Player's inventory.
 - Support for the context menu, if any kind of the `X4 Mod Support APIs` is installed (Not required, but recommended for better user experience).
+- Collect the inventories of all your pilots within Teleportation range of the HQ into its Safe Deposit Storage in one go, via the HQ context menu or the HQ Station Manager.
+- Optional hotkeys for the Safe Deposit Storage and for the inventory of the selected ship's pilot, if the `Native Hotkey API` is installed.
 
-## Download
+## Requirements
 
-You can download the latest version via Steam - [Chem O`Dun's Workshop on Steam](https://steamcommunity.com/id/chemodun/myworkshopfiles/?appid=392160)
+- `X4: Foundations` 8.00 or newer.
+- `Print Extension List`, to record the game version and the enabled extensions in the log. Version `1.00` and upper is required.
+  - It is available via Steam - [Print Extension List](https://steamcommunity.com/sharedfiles/filedetails/?id=3770927339)
+  - Or via the Nexus Mods - [Print Extension List](https://www.nexusmods.com/x4foundations/mods/2191)
+- Optional: `Mod Support APIs` by [SirNukes](https://next.nexusmods.com/profile/sirnukes?gameId=2659), for the context menu entries. Version `1.95` and upper.
+  - It is available via Steam - [SirNukes Mod Support APIs](https://steamcommunity.com/sharedfiles/filedetails/?id=2042901274)
+  - Or via the Nexus Mods - [Mod Support APIs](https://www.nexusmods.com/x4foundations/mods/503)
+- Optional: `Options Helper` together with the `Mod Support APIs`, for the in-game Debug Level option. Version `1.10` and upper.
+  - It is available via Steam - [Options Helper](https://steamcommunity.com/sharedfiles/filedetails/?id=3715253556)
+  - Or via the Nexus Mods - [Options Helper](https://www.nexusmods.com/x4foundations/mods/2089)
+- Optional: `Native Hotkey API`, for the hotkeys. Version `8.00.04` and upper.
+  - It is available via Steam - [Native Hotkey API](https://steamcommunity.com/sharedfiles/filedetails/?id=3750545906)
+  - Or via the Nexus Mods - [Native Hotkey API](https://www.nexusmods.com/x4foundations/mods/2181)
+
+## Installation
+
+You can download the latest version via Steam client - [Remote Access to Safe Deposit Storage and Pilot's Inventories](https://steamcommunity.com/sharedfiles/filedetails/?id=3500039482)
 
 Or you can do it via the [Chem O`Dun's Mods list on Nexus Mods](https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659)
+
+## Save state
+
+**No** (removing the extension does not break saves).
 
 ## Usage
 
@@ -83,17 +101,49 @@ Important remark - the Title of the opened window will be the same as for the Sa
 
 ![Pilot's Inventory](docs/images/pilot_inventory.png)
 
+### Collecting all Pilot's Inventories
+
+**Collect Pilot Inventories** moves every inventory item of your pilots into the Safe Deposit Storage of the HQ at once, without the ships flying there. It takes every ship of yours with a pilot other than you, docked ones included, whose sector is within Teleportation range of the HQ's sector: the same sector with the basic research, up to 2 gate jumps with Range I, up to 4 with Range II, any distance with Range III. Where you are does not matter.
+
+- Via the context menu of the Player's HQ (needs any of the `X4 Mod Support APIs`).
+![Collect Pilot Inventories in the HQ context menu](docs/images/context_menu_collect_pilot_inventories.png)
+- Via the communication with the Player's HQ Station Manager, next to `Access Safe Deposit Storage`.
+![Collect Pilot Inventories in the Station Manager communication](docs/images/station_manager_collect_pilot_inventories.png)
+
+A short hint tells how many items were collected from how many pilots, or that there was nothing to collect.
+
+![Result of Collect Pilot Inventories](docs/images/collect_pilot_inventories_result.png)
+
+### Hotkeys
+
+Needs the optional `Native Hotkey API`. Both hotkeys are off by default: switch **Safe Deposit Storage hotkey** and **Pilot's inventory hotkey** to `Enabled` in **Options Menu > Hotkey Management > Remote Safe Deposit**, then bind keys to the **Access Safe Deposit Storage** and **Open Pilot's Inventory** actions in **Options Menu > Hotkey Management > Hotkey Bindings**.
+
+![Remote Safe Deposit on the Hotkey Management page](docs/images/hotkey_management.png)
+
+![Remote Safe Deposit hotkey switches](docs/images/hotkey_settings.png)
+
+- **Access Safe Deposit Storage** - opens the Safe Deposit Storage of your headquarters, in flight, on foot or on the map.
+- **Open Pilot's Inventory** - opens the inventory of the pilot of the selected ship: the ship selected on the map, your target in flight, or the ship or its pilot under the crosshair on foot. The ship must be yours and flown by a pilot other than you.
+- Both follow the same Teleportation range as the context menu and the communication. When an action is not possible, a short hint says why, also on the map: no headquarters, no suitable ship selected, out of teleportation range, or no inventory items.
+- The hotkeys do nothing while any other menu is open.
+
+Switching a hotkey back to `Disabled` withdraws it and frees its hotkey slot and key for other mods.
+
+### Extension Options
+
+With the optional `Options Helper` installed, **Options Menu > Extension options > Remote Safe Deposit** has one setting:
+
+- **Debug Level** - `None` by default. `Debug` records each access check in the game log, `Trace` adds the context menu detail. Needed only when reporting a problem. Without the `Options Helper` the debug output stays off.
+
+![Remote Safe Deposit Extension Options](docs/images/extension_options.png)
+
 ## Note if X4 Mod Support APIs is not installed
 
-Please be aware that if the `X4 Mod Support APIs` is not installed, you can see one small error message in the debug log file, when it is enabled:
+Please be aware that if the `X4 Mod Support APIs` is not installed, you can see small error messages in the debug log file, when it is enabled:
 
 *Error in MD cue md.RemoteSafeDeposit.AddRemoteAccessActions: Evaluated value 'null' is not of type cue*.
 
-This is not an error, but a warning that the context menu support is not available. The mod will work as expected, but without the context menu support.
-
-## License
-
-This mod is released under the [Apache License 2.0](LICENSE).
+The same message can appear for `md.RemoteSafeDeposit.Register_Menu`. This is not an error, but a warning that the context menu and the options page are not available. The mod will work as expected, but without them.
 
 ## Links
 

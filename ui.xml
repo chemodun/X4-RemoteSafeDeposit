@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon name="remotesafedeposit" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../ui/core/addon.xsd">
+    <environment type="menus">
+        <dependency name="ego_detailmonitorHelper" />
+        <file name="ui/remotesafedeposit_hotkeys.lua" />
+        <savedvariable name="RemoteSafeDeposit_Options" storage="userdata" />
+    </environment>
+</addon>

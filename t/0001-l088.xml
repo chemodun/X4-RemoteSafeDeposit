@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Remote Safe Deposit - Chinese Traditional text, page 1972092449 -->
+<diff>
+  <add sel="/language">
+    <page id="1972092449" title="Remote Safe Deposit" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">Remote Safe Deposit</t>
+
+      <!-- Hotkeys (100) -->
+      <t id="101">Open Pilot's Inventory</t>
+      <t id="102">Collect Pilot Inventories</t>
+      <t id="103">Move the inventory items of every pilot whose ship is within teleportation range of the HQ into its Safe Deposit Storage.</t>
+
+      <!-- Hotkey Management sub-page (500) -->
+      <t id="500">Safe Deposit Storage hotkey</t>
+      <t id="501">Pilot's inventory hotkey</t>
+
+      <!-- Notifications (1000) -->
+      <t id="1000">%s is out of teleportation range.</t>
+      <t id="1001">Select a player-owned ship with a pilot.</t>
+      <t id="1002">%s: the pilot has no inventory items.</t>
+      <t id="1003">You have no headquarters.</t>
+      <t id="1004">Collected %s items from %s pilots into the Safe Deposit Storage.</t>
+      <t id="1005">No pilot inventories to collect within teleportation range of %s.</t>
+
+      <!-- Section: Debug (90900) -->
+      <t id="90900">調試</t>
+      <t id="90910">調試級別</t>
+      <t id="90911">無</t>
+      <t id="90912">調試</t>
+      <t id="90913">追蹤</t>
+    </page>
+  </add>
+</diff>

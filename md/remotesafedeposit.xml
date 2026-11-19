@@ -1,10 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mdscript name="RemoteSafeDeposit" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
   <cues>
-    <cue name="AddRemoteAccessActions" instantiate="true">
+    <library name="ReadDebugChances" purpose="include_actions">
+      <actions>
+        <set_value name="$rsdDebugLevel" exact="if @player.entity.$RemoteSafeDepositConfig.$debugLevel != null
+          then player.entity.$RemoteSafeDepositConfig.$debugLevel else 'none'" />
+        <set_value name="$debugChance" exact="if @$rsdDebugLevel == null or @$rsdDebugLevel == 'none' then 0 else 100" />
+        <set_value name="$traceChance" exact="if @$rsdDebugLevel == 'trace' then 100 else 0" />
+        <remove_value name="$rsdDebugLevel" />
+      </actions>
+    </library>
+
+    <library name="ClearDebugChances" purpose="include_actions">
+      <actions>
+        <remove_value name="$debugChance" />
+        <remove_value name="$traceChance" />
+      </actions>
+    </library>
+
+    <library name="Ensure_Config" purpose="include_actions">
+      <actions>
+        <set_value name="$cfg" exact="table[
+          $debugLevel = 'none',
+        ]" />
+        <do_if value="@player.entity.$RemoteSafeDepositConfig == null">
+          <set_value name="player.entity.$RemoteSafeDepositConfig" exact="$cfg" />
+        </do_if>
+        <do_else>
+          <do_for_each name="$key" in="$cfg">
+            <do_if value="not player.entity.$RemoteSafeDepositConfig.{$key}?">
+              <set_value name="player.entity.$RemoteSafeDepositConfig.{$key}" exact="$cfg.{$key}" />
+            </do_if>
+          </do_for_each>
+        </do_else>
+        <remove_value name="$cfg" />
+      </actions>
+    </library>
+
+    <cue name="Init" version="1">
+      <actions>
+        <include_actions ref="Ensure_Config" />
+      </actions>
+      <cues>
+
+        <cue name="On_Game_Loaded" instantiate="true" version="1">
+          <conditions>
+            <event_game_loaded />
+          </conditions>
+          <actions>
+            <include_actions ref="Ensure_Config" />
+          </actions>
+        </cue>
+
+        <!-- Options page only when options_helper (and with it the Simple Menu API) is installed -->
+        <cue name="Register_Menu" instantiate="true" version="1">
+          <conditions>
+            <event_cue_signalled cue="@md.Simple_Menu_API.Reloaded" />
+            <check_value value="@md.Options_Helper.Add_Dropdown.exists" />
+          </conditions>
+          <actions>
+            <signal_cue_instantly cue="md.Simple_Menu_API.Register_Options_Menu"
+              param="table[
+                $id      = 'remote_safe_deposit_options_menu',
+                $columns = 12,
+                $title   = {1972092449, 1},
+                $onOpen  = Options_Menu,
+              ]" />
+          </actions>
+        </cue>
+
+        <cue name="Options_Menu" instantiate="true" version="1">
+          <conditions>
+            <event_cue_signalled />
+          </conditions>
+          <actions>
+            <include_actions ref="Ensure_Config" />
+            <set_value name="$cfg" exact="player.entity.$RemoteSafeDepositConfig" />
+
+            <run_actions ref="md.Options_Helper.Add_Title_Row">
+              <param name="title" value="{1972092449, 90900}" />
+            </run_actions>
+
+            <set_value name="$debugLevelOptions" exact="[
+              table[$text = {1972092449, 90911}, $value = 'none'],
+              table[$text = {1972092449, 90912}, $value = 'debug'],
+              table[$text = {1972092449, 90913}, $value = 'trace']
+            ]" />
+            <set_value name="$debugLevelIndexes" exact="['none', 'debug', 'trace']" />
+            <set_value name="$debugLevelCurrentIndex" exact="$debugLevelIndexes.indexof.{@$cfg.$debugLevel}" />
+            <do_if value="$debugLevelCurrentIndex == 0">
+              <set_value name="$debugLevelCurrentIndex" exact="1" />
+            </do_if>
+
+            <run_actions ref="md.Options_Helper.Add_Dropdown">
+              <param name="id" value="'debugLevel'" />
+              <param name="options" value="$debugLevelOptions" />
+              <param name="currentIndex" value="$debugLevelCurrentIndex" />
+              <param name="col" value="1" />
+              <param name="textColSpan" value="6" />
+              <param name="text" value="{1972092449, 90910}" />
+              <param name="dropdownColSpan" value="6" />
+              <param name="handle" value="Handle_Dropdown_Changed" />
+            </run_actions>
+
+            <remove_value name="$debugLevelOptions" />
+            <remove_value name="$debugLevelIndexes" />
+            <remove_value name="$debugLevelCurrentIndex" />
+            <remove_value name="$cfg" />
+          </actions>
+        </cue>
+
+        <cue name="Handle_Dropdown_Changed" instantiate="true" version="1">
+          <conditions>
+            <event_cue_signalled />
+          </conditions>
+          <actions>
+            <set_value name="$resultTable" exact="player.entity.$RemoteSafeDepositConfig" />
+            <include_actions ref="md.Options_Helper.Process_Dropdown_Changed" />
+            <remove_value name="$resultTable" />
+            <include_actions ref="ReadDebugChances" />
+            <debug_text text="'RemoteSafeDeposit: Options: %s set to %s'.[event.param.$echo.$valueId, @event.param.$option.$value]" chance="$debugChance" />
+            <include_actions ref="ClearDebugChances" />
+          </actions>
+        </cue>
+
+        <!-- Hotkeys from ui/remotesafedeposit_hotkeys.lua, only with hotkey_api -->
+        <cue name="Hotkey_Safe_Deposit" instantiate="true" version="1">
+          <conditions>
+            <event_ui_triggered screen="'RemoteSafeDeposit'" control="'hotkey_hq'" />
+          </conditions>
+          <actions>
+            <include_actions ref="ReadDebugChances" />
+            <set_value name="$hq" exact="player.headquarters" />
+            <do_if value="not $hq">
+              <debug_text text="'RemoteSafeDeposit: Hotkey: no headquarters'" chance="$debugChance" />
+              <show_help custom="'%s\n%s'.[{1972092449, 1}, {1972092449, 1003}]" duration="5s" />
+            </do_if>
+            <do_else>
+              <set_value name="$remoteActionTarget" exact="$hq" />
+              <include_actions ref="IsRemoteActionAcceptable" />
+              <debug_text text="'RemoteSafeDeposit: Hotkey: HQ %s, acceptable: %s'.[$hq.debugname, $isRemoteActionAcceptable]" chance="$debugChance" />
+              <do_if value="$isRemoteActionAcceptable">
+                <open_menu menu="InventoryTraderMenu" param="[0, 0, $hq.defencenpc, null, true]" />
+              </do_if>
+              <do_else>
+                <show_help custom="'%s\n%s'.[{1972092449, 1}, {1972092449, 1000}.['%s (%s)'.[$hq.knownname, $hq.idcode]]]" duration="5s" />
+              </do_else>
+            </do_else>
+            <include_actions ref="ClearDebugChances" />
+          </actions>
+        </cue>
+
+        <cue name="Hotkey_Pilot_Inventory" instantiate="true" version="1">
+          <conditions>
+            <event_ui_triggered screen="'RemoteSafeDeposit'" control="'hotkey_pilot'" />
+          </conditions>
+          <actions>
+            <include_actions ref="ReadDebugChances" />
+            <set_value name="$ship" exact="@event.param3" />
+            <debug_text text="'RemoteSafeDeposit: Hotkey: selected %s'.[@$ship.debugname]" chance="$debugChance" />
+            <!-- In first person the crosshair can be on the pilot -->
+            <do_if value="@$ship.isclass.npc">
+              <set_value name="$ship" exact="@$ship.controlled" />
+            </do_if>
+            <do_if value="not @$ship.isclass.ship or $ship.trueowner != faction.player or not $ship.pilot or $ship.pilot == player.entity or $ship.pilot.race == race.drone">
+              <show_help custom="'%s\n%s'.[{1972092449, 1}, {1972092449, 1001}]" duration="5s" />
+            </do_if>
+            <do_else>
+              <set_value name="$remoteActionTarget" exact="$ship" />
+              <include_actions ref="IsRemoteActionAcceptable" />
+              <debug_text text="'RemoteSafeDeposit: Hotkey: ship %s, pilot %s, items %s, acceptable: %s'.[$ship.debugname, $ship.pilot.debugname, $ship.pilot.inventory.count, $isRemoteActionAcceptable]" chance="$debugChance" />
+              <set_value name="$name" exact="'%s (%s)'.[$ship.knownname, $ship.idcode]" />
+              <do_if value="not $isRemoteActionAcceptable">
+                <show_help custom="'%s\n%s'.[{1972092449, 1}, {1972092449, 1000}.[$name]]" duration="5s" />
+              </do_if>
+              <do_elseif value="$ship.pilot.inventory.count le 0">
+                <show_help custom="'%s\n%s'.[{1972092449, 1}, {1972092449, 1002}.[$name]]" duration="5s" />
+              </do_elseif>
+              <do_else>
+                <open_menu menu="InventoryTraderMenu" param="[0, 0, $ship.pilot, null, true]" />
+              </do_else>
+            </do_else>
+            <include_actions ref="ClearDebugChances" />
+          </actions>
+        </cue>
+
+      </cues>
+    </cue>
+
+    <cue name="AddRemoteAccessActions" instantiate="true" version="2">
       <conditions>
         <event_cue_signalled cue="@md.Interact_Menu_API.Get_Actions" />
-        <debug_text text="'RemoteSafeDeposit: Interact: Object: %s, Param: %s'.[@event.object.debugname, @event.param]" />
+        <debug_text text="'RemoteSafeDeposit: Interact: Object: %s, Param: %s'.[@event.object.debugname, @event.param]"
+          debugchance="if @player.entity.$RemoteSafeDepositConfig.$debugLevel == 'trace' then 100 else 0" />
         <check_value value="@event.param.$object != null" />
         <check_value value="@event.param.$object.trueowner == faction.player" />
         <check_any>
@@ -12,7 +200,8 @@
           <check_all>
             <check_value value="@event.param.$object.isclass.ship" />
             <debug_text
-              text="'RemoteSafeDeposit: Interact: IsShip: %s, Pilot: %s, Is Player Entity: %s,  PilotRace: %s'.[@event.param.$object.isclass.ship, @event.param.$object.pilot, @event.param.$object.pilot != player.entity, @event.param.$object.pilot.race]" />
+              text="'RemoteSafeDeposit: Interact: IsShip: %s, Pilot: %s, Is Player Entity: %s,  PilotRace: %s'.[@event.param.$object.isclass.ship, @event.param.$object.pilot, @event.param.$object.pilot != player.entity, @event.param.$object.pilot.race]"
+              debugchance="if @player.entity.$RemoteSafeDepositConfig.$debugLevel == 'trace' then 100 else 0" />
             <check_value value="@event.param.$object.pilot != null" />
             <check_value value="@event.param.$object.pilot.race != race.drone" />
             <check_value value="@event.param.$object.pilot != player.entity" />
@@ -33,6 +222,15 @@
               $callback   = RemoteAccessToHQSafeDeposit,
               $active     = $isRemoteActionAcceptable,
               ]" />
+          <signal_cue_instantly
+            cue="md.Interact_Menu_API.Add_Action"
+            param="table[
+              $id         = 'safe_deposit_collect_inventories',
+              $section    = 'interaction',
+              $text       = {1972092449, 102},
+              $mouseover  = {1972092449, 103},
+              $callback   = RemoteCollectPilotInventories,
+              ]" />
         </do_if>
         <do_else>
           <signal_cue_instantly
@@ -49,20 +247,22 @@
         <remove_value name="$isRemoteActionAcceptable" />
       </actions>
     </cue>
-    <cue name="RemoteAccessToHQSafeDeposit" instantiate="true">
+    <cue name="RemoteAccessToHQSafeDeposit" instantiate="true" version="2">
       <conditions>
         <event_cue_signalled />
-        <debug_text text="'RemoteSafeDeposit: HQSafeDeposit: Object: %s, Param: %s'.[@event.object.debugname, @event.param]" />
+        <debug_text text="'RemoteSafeDeposit: HQSafeDeposit: Object: %s, Param: %s'.[@event.object.debugname, @event.param]"
+          debugchance="if ['debug', 'trace'].indexof.{@player.entity.$RemoteSafeDepositConfig.$debugLevel} then 100 else 0" />
         <check_value value="@event.param.$object.isheadquarters" />
       </conditions>
       <actions>
         <open_menu menu="InventoryTraderMenu" param="[0, 0, event.param.$object.defencenpc, null, true]" />
       </actions>
     </cue>
-    <cue name="RemoteAccessToPilotInventory" instantiate="true">
+    <cue name="RemoteAccessToPilotInventory" instantiate="true" version="2">
       <conditions>
         <event_cue_signalled />
-        <debug_text text="'RemoteSafeDeposit: PilotInventory: Object: %s, Param: %s'.[@event.object.debugname, @event.param]" />
+        <debug_text text="'RemoteSafeDeposit: PilotInventory: Object: %s, Param: %s'.[@event.object.debugname, @event.param]"
+          debugchance="if ['debug', 'trace'].indexof.{@player.entity.$RemoteSafeDepositConfig.$debugLevel} then 100 else 0" />
         <check_value value="@event.param.$object.isclass.ship" />
         <check_value value="@event.param.$object.pilot != null" />
         <check_value value="@event.param.$object.pilot != player.entity" />
@@ -72,8 +272,79 @@
         <open_menu menu="InventoryTraderMenu" param="[0, 0, event.param.$object.pilot, null, true]" />
       </actions>
     </cue>
-    <library name="IsRemoteActionAcceptable">
+    <cue name="RemoteCollectPilotInventories" instantiate="true" version="1">
+      <conditions>
+        <event_cue_signalled />
+        <check_value value="@event.param.$object.isheadquarters" />
+      </conditions>
       <actions>
+        <signal_cue_instantly cue="Collect_Pilot_Inventories" param="event.param.$object" />
+      </actions>
+    </cue>
+    <!-- param: the HQ. Moves every pilot inventory within teleportation range of the HQ (gate jumps ship -> HQ) into its Safe Deposit Storage -->
+    <cue name="Collect_Pilot_Inventories" instantiate="true" version="1">
+      <conditions>
+        <event_cue_signalled />
+        <check_value value="@event.param.isheadquarters" />
+      </conditions>
+      <actions>
+        <include_actions ref="ReadDebugChances" />
+        <set_value name="$hq" exact="event.param" />
+        <set_value name="$storage" exact="@$hq.defencenpc" />
+        <!-- -2: no Teleportation research, -1: no gate limit -->
+        <set_value name="$maxJumps" exact="-2" />
+        <do_if value="ware.research_teleportation_range_03.research.unlocked">
+          <set_value name="$maxJumps" exact="-1" />
+        </do_if>
+        <do_elseif value="ware.research_teleportation_range_02.research.unlocked">
+          <set_value name="$maxJumps" exact="4" />
+        </do_elseif>
+        <do_elseif value="ware.research_teleportation_range_01.research.unlocked">
+          <set_value name="$maxJumps" exact="2" />
+        </do_elseif>
+        <do_elseif value="ware.research_teleportation.research.unlocked">
+          <set_value name="$maxJumps" exact="0" />
+        </do_elseif>
+        <set_value name="$candidates" exact="[]" />
+        <set_value name="$pilots" exact="0" />
+        <set_value name="$items" exact="0" />
+        <do_if value="$storage and $maxJumps ge -1">
+          <find_ship name="$candidates" trueowner="faction.player" space="player.galaxy" multiple="true" recursive="true">
+            <match_gate_distance object="$hq" max="$maxJumps" condition="$maxJumps ge 0" />
+          </find_ship>
+          <do_for_each name="$ship" in="$candidates">
+            <set_value name="$pilot" exact="$ship.pilot" />
+            <do_if value="$pilot and $pilot != player.entity and $pilot.race != race.drone and $pilot.inventory.count gt 0">
+              <set_value name="$pilots" operation="add" />
+              <set_value name="$pilotItems" exact="0" />
+              <do_all exact="$pilot.inventory.count" counter="$i" reverse="true">
+                <set_value name="$ware" exact="$pilot.inventory.{$i}" />
+                <do_if value="$ware and $pilot.inventory.{$ware}.exists and $pilot.inventory.{$ware}.count gt 0">
+                  <set_value name="$amount" exact="$pilot.inventory.{$ware}.count" />
+                  <add_inventory entity="$storage" ware="$ware" exact="$amount" />
+                  <remove_inventory entity="$pilot" ware="$ware" exact="$amount" />
+                  <set_value name="$pilotItems" operation="add" exact="$amount" />
+                </do_if>
+              </do_all>
+              <set_value name="$items" operation="add" exact="$pilotItems" />
+              <debug_text text="'RemoteSafeDeposit: Collect: %s, pilot %s, items %s'.[$ship.debugname, $pilot.debugname, $pilotItems]" chance="$traceChance" />
+            </do_if>
+          </do_for_each>
+        </do_if>
+        <debug_text text="'RemoteSafeDeposit: Collect: HQ %s, max jumps %s, ships checked %s, pilots %s, items %s'.[$hq.debugname, $maxJumps, $candidates.count, $pilots, $items]" chance="$debugChance" />
+        <do_if value="$items gt 0">
+          <show_help custom="'%s\n%s'.[{1972092449, 1}, {1972092449, 1004}.[$items, $pilots]]" duration="5s" />
+        </do_if>
+        <do_else>
+          <show_help custom="'%s\n%s'.[{1972092449, 1}, {1972092449, 1005}.['%s (%s)'.[$hq.knownname, $hq.idcode]]]" duration="5s" />
+        </do_else>
+        <include_actions ref="ClearDebugChances" />
+      </actions>
+    </cue>
+    <!-- Caller sets $remoteActionTarget, or the comm path leaves it to event.object.controlled; yields $isRemoteActionAcceptable -->
+    <library name="IsRemoteActionAcceptable" version="2">
+      <actions>
+        <set_value name="$rsdDebugChance" exact="if ['debug', 'trace'].indexof.{@player.entity.$RemoteSafeDepositConfig.$debugLevel} then 100 else 0" />
         <set_value name="$isRemoteActionAcceptable" exact="false" />
         <do_if value="ware.research_teleportation_range_03.research.unlocked">
           <set_value name="$isRemoteActionAcceptable" exact="true" />
@@ -82,34 +353,44 @@
             [
               @ware.research_teleportation_range_03.research.unlocked
             ]"
+            chance="$rsdDebugChance"
           />
         </do_if>
         <do_else>
-          <do_if value="@remoteActionTarget == null">
+          <do_if value="@$remoteActionTarget == null">
             <set_value name="$remoteActionTarget" exact="event.object.controlled" />
           </do_if>
-          <set_value name="$distanceToRemote" exact="player.sector.gatedistance.{@$remoteActionTarget.sector}" />
-          <do_if value="$distanceToRemote lt 5 and ware.research_teleportation_range_02.research.unlocked">
-            <set_value name="$isRemoteActionAcceptable" exact="true" />
+          <!-- -1: unreachable; no null test, 0 == null in MD -->
+          <set_value name="$distanceToRemote" exact="-1" />
+          <do_if value="@$remoteActionTarget.sector and player.sector">
+            <set_value name="$distanceToRemote" exact="player.sector.gatedistance.{$remoteActionTarget.sector}" />
           </do_if>
-          <do_elseif value="$distanceToRemote lt 3 and ware.research_teleportation_range_01.research.unlocked">
-            <set_value name="$isRemoteActionAcceptable" exact="true" />
-          </do_elseif>
-          <do_elseif value="$distanceToRemote lt 1 and ware.research_teleportation.research.unlocked">
-            <set_value name="$isRemoteActionAcceptable" exact="true" />
-          </do_elseif>
+          <do_if value="$distanceToRemote ge 0">
+            <do_if value="$distanceToRemote lt 5 and ware.research_teleportation_range_02.research.unlocked">
+              <set_value name="$isRemoteActionAcceptable" exact="true" />
+            </do_if>
+            <do_elseif value="$distanceToRemote lt 3 and ware.research_teleportation_range_01.research.unlocked">
+              <set_value name="$isRemoteActionAcceptable" exact="true" />
+            </do_elseif>
+            <do_elseif value="$distanceToRemote lt 1 and ware.research_teleportation.research.unlocked">
+              <set_value name="$isRemoteActionAcceptable" exact="true" />
+            </do_elseif>
+          </do_if>
           <debug_text
-            text="'RemoteSafeDeposit: Distance: %s. Teleportation Unlocked: Basic: %s. Range 1: %s. Range 2: %s.'.
+            text="'RemoteSafeDeposit: Target: %s. Distance: %s. Teleportation Unlocked: Basic: %s. Range 1: %s. Range 2: %s.'.
               [
+                @$remoteActionTarget.debugname,
                 @$distanceToRemote,
                 @ware.research_teleportation.research.unlocked,
                 @ware.research_teleportation_range_01.research.unlocked,
                 @ware.research_teleportation_range_02.research.unlocked
               ]"
+            chance="$rsdDebugChance"
           />
           <remove_value name="$distanceToRemote" />
-          <remove_value name="$remoteActionTarget" />
         </do_else>
+        <remove_value name="$remoteActionTarget" />
+        <remove_value name="$rsdDebugChance" />
       </actions>
     </library>
   </cues>

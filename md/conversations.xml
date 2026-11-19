@@ -28,11 +28,15 @@
         <add_player_choice_sub text="{1010,50}" section="g_remote_safe_deposit" position="top_left" selectable="false" tooltip="{1026, 7816}" comment="Show me Safe Deposit" />
       </do_else>
       <remove_value name="$isRemoteActionAcceptable" />
+      <add_player_choice text="{1972092449, 102}" section="g_rsd_collect_inventories" position="bottom_left" tooltip="{1972092449, 103}" comment="Collect pilot inventories" />
     </do_if>
   </add>
   <add sel="/mdscript/cues/cue[@name='SectionHandler']/actions/do_elseif[@value=&quot;event.param == 'g_fire'&quot;]" pos="after">
     <do_elseif value="event.param == 'g_remote_safe_deposit'">
       <open_conversation_menu menu="InventoryTraderMenu" param="[0, 0, event.object.controlled.defencenpc, null, true]" />
+    </do_elseif>
+    <do_elseif value="event.param == 'g_rsd_collect_inventories'">
+      <signal_cue_instantly cue="md.RemoteSafeDeposit.Collect_Pilot_Inventories" param="event.object.controlled" />
     </do_elseif>
     <do_elseif value="event.param == 'g_inventory_remote'">
       <open_conversation_menu menu="InventoryTraderMenu" param="[0, 0, event.object, null, true]" />
